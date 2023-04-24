@@ -1,6 +1,7 @@
 {% set name = "abseil-cpp" %}
 {% set version = "20230125.2" %}
 {% set v_major = version.split(".")[0] %}
+{% set cxx_standard = "17" %}
 
 package:
   name: {{ name|lower }}
@@ -27,6 +28,8 @@ build:
     - {{ pin_subpackage("abseil-cpp", max_pin="x.x") }}
   missing_dso_whitelist:  # [s390x]
     - '$RPATH/ld64.so.1'  # [s390x]
+  script_env:
+    - CXX_STANDARD={{ cxx_standard }}
 
 requirements:
   build:
@@ -94,8 +97,8 @@ test:
     - cd cmake_test
     - export CMAKE_ARGS="$CMAKE_ARGS -GNinja -DCMAKE_BUILD_TYPE=Release"  # [unix]
     - set "CMAKE_ARGS=%CMAKE_ARGS% -GNinja -DCMAKE_BUILD_TYPE=Release"    # [win]
-    - cmake $CMAKE_ARGS  -DCMAKE_CXX_STANDARD=17 .        # [unix]
-    - cmake %CMAKE_ARGS% -DCMAKE_CXX_STANDARD=17 .        # [win]
+    - cmake $CMAKE_ARGS  -DCMAKE_CXX_STANDARD={{ cxx_standard }} .        # [unix]
+    - cmake %CMAKE_ARGS% -DCMAKE_CXX_STANDARD={{ cxx_standard }} .        # [win]
     - cmake --build .
     - ./flags_example    # [unix]
     - flags_example.exe  # [win]
