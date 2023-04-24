@@ -12,6 +12,13 @@ source:
     - patches/0001-clang4_osx_fix.diff  # [osx]
     - patches/0002-osx_framework_fix.diff  # [osx]
     - patches/0003-remove-4221.patch  # [win]
+    - patches/0004-add-missing-osx-workaround.patch
+    # backport of https://github.com/abseil/abseil-cpp/pull/1115
+    - patches/0005-fix-some-missing-ABSL_INTERNAL_DLL_TARGETS-for-share.patch
+    # Helps downstream packages import the dll without an extra define
+    # https://github.com/conda-forge/abseil-cpp-feedstock/issues/43#issuecomment-1242969515
+    - patches/0006-default-dll-import-for-windows.patch  # [win]
+    - patches/0007-Fix-ABSL_PROPAGATE_CXX_STD-cmake-option.patch
 
 build:
   number: 0
