@@ -2,11 +2,14 @@ mkdir -p build
 cd build
 
 cmake ${CMAKE_ARGS} -DCMAKE_INSTALL_PREFIX=${PREFIX} \
-	  -DCMAKE_PREFIX_PATH=${PREFIX} \
-	  -DCMAKE_INSTALL_LIBDIR=lib \
-	  -DCMAKE_BUILD_TYPE=Release \
-      -DBUILD_SHARED_LIBS=ON \
-      -GNinja \
-	  ..
+    -DCMAKE_PREFIX_PATH=${PREFIX} \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=ON \
+    -DCMAKE_CXX_STANDARD=17 \
+    -DABSL_PROPAGATE_CXX_STD=ON \
+    -GNinja \
+    ..
 
-ninja install
+cmake --build .
+cmake --install .
