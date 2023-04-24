@@ -53,6 +53,7 @@ requirements:
     "scoped_set_env", "spinlock_wait", "stacktrace", "status", "statusor", "strerror", "strings",
     "symbolize", "synchronization", "time", "time_zone"
 ] %}
+
 test:
   requires:
     - {{ compiler('cxx') }}
@@ -87,6 +88,17 @@ test:
 
     # pkg-config (abseil_dll)
     - pkg-config --print-errors --exact-version "{{ v_major }}" abseil_dll  # [win]
+
+
+    # CMake integration
+    - cd cmake_test
+    - export CMAKE_ARGS="$CMAKE_ARGS -GNinja -DCMAKE_BUILD_TYPE=Release"  # [unix]
+    - set "CMAKE_ARGS=%CMAKE_ARGS% -GNinja -DCMAKE_BUILD_TYPE=Release"    # [win]
+    - cmake $CMAKE_ARGS  -DCMAKE_CXX_STANDARD=17 .        # [unix]
+    - cmake %CMAKE_ARGS% -DCMAKE_CXX_STANDARD=17 .        # [win]
+    - cmake --build .
+    - ./flags_example    # [unix]
+    - flags_example.exe  # [win]
 
 about:
   home: https://github.com/abseil/abseil-cpp
