@@ -1,9 +1,37 @@
---- ./absl/copts/copts.py.oirg	2020-07-30 12:57:32.000000000 +0200
-+++ ./absl/copts/copts.py	2020-07-30 12:57:51.000000000 +0200
-@@ -182,10 +182,7 @@
-         "/wd4996",  # use of deprecated symbol
-         "/DNOMINMAX",  # disable the min() and max() macros from <windows.h>
-     ],
+From dfbac02988c119967037c53a0f78f03bdf01e1c8 Mon Sep 17 00:00:00 2001
+From: "Uwe L. Korn" <uwe.korn@quantco.com>
+Date: Thu, 30 Jul 2020 13:01:32 +0200
+Subject: [PATCH 3/7] remove "-ignore:4221" from ABSL_MSVC_LINKOPTS
+
+see also https://github.com/microsoft/vcpkg/issues/13945
+---
+ absl/copts/GENERATED_AbseilCopts.cmake | 4 ----
+ absl/copts/copts.py                    | 5 +----
+ 2 files changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/absl/copts/GENERATED_AbseilCopts.cmake b/absl/copts/GENERATED_AbseilCopts.cmake
+index 430916f7..358354e1 100644
+--- a/absl/copts/GENERATED_AbseilCopts.cmake
++++ b/absl/copts/GENERATED_AbseilCopts.cmake
+@@ -186,10 +186,6 @@ list(APPEND ABSL_MSVC_FLAGS
+     "/D_ENABLE_EXTENDED_ALIGNED_STORAGE"
+ )
+ 
+-list(APPEND ABSL_MSVC_LINKOPTS
+-    "-ignore:4221"
+-)
+-
+ list(APPEND ABSL_MSVC_TEST_FLAGS
+     "/W3"
+     "/bigobj"
+diff --git a/absl/copts/copts.py b/absl/copts/copts.py
+index e6e11949..09ac7618 100644
+--- a/absl/copts/copts.py
++++ b/absl/copts/copts.py
+@@ -173,10 +173,7 @@ COPT_VARS = {
+             "/wd4996",  # use of deprecated symbol
+             "/DNOMINMAX",  # disable the min() and max() macros from <windows.h>
+         ],
 -    "ABSL_MSVC_LINKOPTS": [
 -        # Object file doesn't export any previously undefined symbols
 -        "-ignore:4221",
@@ -12,16 +40,6 @@
      # "HWAES" is an abbreviation for "hardware AES" (AES - Advanced Encryption
      # Standard). These flags are used for detecting whether or not the target
      # architecture has hardware support for AES instructions which can be used
---- ./absl/copts/GENERATED_AbseilCopts.cmake.orig	2020-07-30 12:57:39.000000000 +0200
-+++ ./absl/copts/GENERATED_AbseilCopts.cmake	2020-07-30 12:58:31.000000000 +0200
-@@ -184,10 +184,6 @@
-     "/wd4800"
- )
- 
--list(APPEND ABSL_MSVC_LINKOPTS
--    "-ignore:4221"
--)
--
- list(APPEND ABSL_MSVC_TEST_FLAGS
-     "/wd4018"
-     "/wd4101"
+-- 
+2.33.0.windows.2
+
