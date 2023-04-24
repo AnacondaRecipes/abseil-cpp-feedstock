@@ -9,10 +9,9 @@ source:
   url: https://github.com/abseil/{{ name }}/archive/{{ version }}.tar.gz
   sha256: 9a2b5752d7bfade0bdeee2701de17c9480620f8b237e1964c1b9967c75374906
   patches:
-    #- linux-librt.patch  # [linux]
-    - clang4_osx_fix.diff  # [osx]
-    - osx_framework_fix.diff  # [osx]
-    - remove-4221.patch  # [win]
+    - patches/0001-clang4_osx_fix.diff  # [osx]
+    - patches/0002-osx_framework_fix.diff  # [osx]
+    - patches/0003-remove-4221.patch  # [win]
 
 build:
   number: 0
