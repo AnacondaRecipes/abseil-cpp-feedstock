@@ -55,7 +55,12 @@ requirements:
 ] %}
 test:
   requires:
+    - {{ compiler('cxx') }}
+    - cmake
+    - ninja
     - pkg-config
+  files:
+    - cmake_test/
   commands:
     # windows-only (almost-)all-in-one DLL + import library
     - if not exist %LIBRARY_BIN%\\abseil_dll.dll exit 1           # [win]
