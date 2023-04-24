@@ -10,7 +10,7 @@ source:
   sha256: 9a2b5752d7bfade0bdeee2701de17c9480620f8b237e1964c1b9967c75374906
   patches:
     - patches/0001-clang4-osx-fix.patch  # [osx]
-    - patches/0002-osx_-ramework-fix.patch  # [osx]
+    - patches/0002-osx-framework-fix.patch  # [osx]
     - patches/0003-remove-4221.patch  # [win]
     - patches/0004-add-missing-osx-workaround.patch
     # backport of https://github.com/abseil/abseil-cpp/pull/1115

@@ -1,8 +1,17 @@
+From c8bd75a96ecb2bd528399829692307a03985da0b Mon Sep 17 00:00:00 2001
+From: Francesco Biscani <bluescarni@gmail.com>
+Date: Sat, 21 Sep 2019 21:39:26 +0200
+Subject: [PATCH 2/7] fix for linking to the CoreFoundation framework on OSX
+
+---
+ absl/time/CMakeLists.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
 diff --git a/absl/time/CMakeLists.txt b/absl/time/CMakeLists.txt
-index 5909832..087bb6a 100644
+index 7b720540..cfed46a4 100644
 --- a/absl/time/CMakeLists.txt
 +++ b/absl/time/CMakeLists.txt
-@@ -82,10 +82,12 @@ absl_cc_library(
+@@ -83,10 +83,12 @@ absl_cc_library(
      "internal/cctz/src/zone_info_source.cc"
    COPTS
      ${ABSL_DEFAULT_COPTS}
@@ -14,6 +23,9 @@ index 5909832..087bb6a 100644
 +  target_link_options(time_zone PUBLIC -framework CoreFoundation)
 +endif()
 +
+ # Internal-only target, do not depend on directly.
  absl_cc_library(
    NAME
-     test_util
+-- 
+2.33.0.windows.2
+
