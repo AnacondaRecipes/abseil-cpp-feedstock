@@ -1,5 +1,5 @@
 {% set name = "abseil-cpp" %}
-{% set version = "20211102.0" %}
+{% set version = "20230802.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,12 +7,9 @@ package:
 
 source:
   url: https://github.com/abseil/{{ name }}/archive/{{ version }}.tar.gz
-  sha256: dcf71b9cba8dc0ca9940c4b316a0c796be8fab42b070bb6b7cab62b48f0e66c4
+  sha256: 59d2976af9d6ecf001a81a35749a6e551a335b949d34918cfade07737b9d93c5
   patches:
-    #- linux-librt.patch  # [linux]
     - clang4_osx_fix.diff  # [osx]
-    - osx_framework_fix.diff  # [osx]
-    - remove-4221.patch  # [win]
 
 build:
   number: 0
@@ -25,8 +22,7 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - patch  # [unix]
-    - m2-patch  # [win]
+    - patch  # [osx]
     - cmake
     - ninja
 
@@ -36,7 +32,7 @@ requirements:
     "cordz_sample_token", "examine_stack", "exponential_biased", "failure_signal_handler",
     "flags", "flags_commandlineflag", "flags_config", "flags_marshalling", "flags_parse",
     "flags_private_handle_accessor", "flags_program_name", "flags_reflection", "flags_usage",
-    "hash", "hashtablez_sampler", "int128", "log_severity", "low_level_hash", "periodic_sampler",
+    "hash", "hashtablez_sampler", "int128", "log_severity", "log_initialize", "low_level_hash", "periodic_sampler",
     "random_distributions", "random_seed_gen_exception", "random_seed_sequences", "raw_hash_set",
     "scoped_set_env", "spinlock_wait", "stacktrace", "status", "statusor", "strerror", "strings",
     "symbolize", "synchronization", "time", "time_zone"
