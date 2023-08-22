@@ -12,7 +12,7 @@ source:
     - clang4_osx_fix.diff  # [osx]
 
 build:
-  number: 0
+  number: 1
   run_exports:
     - {{ pin_subpackage("abseil-cpp", max_pin="x.x") }}
   missing_dso_whitelist:  # [s390x]
@@ -25,6 +25,10 @@ requirements:
     - patch  # [osx]
     - cmake
     - ninja
+  host:
+    - gtest 1.14.0
+    - gmock 1.14.0
+  
 
 # Testing section taken from Conda-Forge
 {% set absl_libs = [
