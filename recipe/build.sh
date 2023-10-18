@@ -23,7 +23,6 @@ cmake -G Ninja \
 	-DBUILD_SHARED_LIBS=ON \
 	-DCMAKE_CXX_STANDARD=17 \
 	-DABSL_PROPAGATE_CXX_STD=ON \
-	${CMAKE_ARGS} \
     ..
 
 ninja install || exit 1
