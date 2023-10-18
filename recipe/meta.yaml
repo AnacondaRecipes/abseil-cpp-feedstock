@@ -1,5 +1,6 @@
 {% set name = "abseil-cpp" %}
 {% set version = "20230802.0" %}
+{% set v_major = version.split(".")[0] %}
 
 package:
   name: {{ name|lower }}
@@ -12,7 +13,7 @@ source:
     - clang4_osx_fix.diff  # [osx]
 
 build:
-  number: 0
+  number: 1
   run_exports:
     - {{ pin_subpackage("abseil-cpp", max_pin="x.x") }}
   missing_dso_whitelist:  # [s390x]
@@ -26,8 +27,15 @@ requirements:
     - cmake
     - ninja
 
+# shared builds for flags_* libraries are not supported on windows, see
+# https://github.com/abseil/abseil-cpp/pull/1115
+{% set absl_libs_always_static_on_win = [
+    "flags", "flags_commandlineflag", "flags_config", "flags_marshalling", "flags_parse",
+    "flags_private_handle_accessor", "flags_program_name", "flags_reflection", "flags_usage"
+] %}
+
 # Testing section taken from Conda-Forge
-{% set absl_libs = [
+{% set absl_libs = absl_libs_always_static_on_win + [
     "base", "civil_time", "cord", "cordz_functions", "cordz_handle", "cordz_info",
     "cordz_sample_token", "examine_stack", "exponential_biased", "failure_signal_handler",
     "flags", "flags_commandlineflag", "flags_config", "flags_marshalling", "flags_parse",
@@ -39,15 +47,33 @@ requirements:
 ] %}
 test:
   commands:
-    # absl_libs
+    # windows-only (almost-)all-in-one DLL + import library
+    - if not exist %LIBRARY_BIN%\\abseil_dll.dll exit 1           # [win]
+    - if not exist %LIBRARY_LIB%\\abseil_dll.lib exit 1           # [win]
+    # absence of test targets in regular abseil output
+    - if exist %LIBRARY_BIN%\\abseil_test_dll.dll exit 1          # [win]
+    - if exist %LIBRARY_LIB%\\abseil_test_dll.lib exit 1          # [win]
+
+    # absl_* libraries
     {% for each_lib in absl_libs %}
     # presence of shared libs
     - test -f $PREFIX/lib/libabsl_{{ each_lib }}${SHLIB_EXT}      # [unix]
     # absence of static libs
     - test ! -f $PREFIX/lib/libabsl_{{ each_lib }}.a              # [unix]
-    # TODO: do we want to get rid of the static windows libs?
-    # - if exist %LIBRARY_LIB%\\absl_{{ each_lib }}.lib exit 1      # [win]
+
+    # some static libs remain on windows even for shared builds, see above
+    {% if each_lib in absl_libs_always_static_on_win %}
+    - if not exist %LIBRARY_LIB%\\absl_{{ each_lib }}.lib exit 1  # [win]
+    {% else %}
+    - if exist %LIBRARY_LIB%\\absl_{{ each_lib }}.lib exit 1      # [win]
+    {% endif %}
+
+    # pkg-config (should point to abseil_dll on shared windows builds)
+    - pkg-config --print-errors --exact-version "{{ v_major }}" absl_{{ each_lib }}
     {% endfor %}
+
+    # pkg-config (abseil_dll)
+    - pkg-config --print-errors --exact-version "{{ v_major }}" abseil_dll  # [win]
 
 about:
   home: https://github.com/abseil/abseil-cpp
