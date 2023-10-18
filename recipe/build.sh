@@ -11,7 +11,6 @@ if [[ "${target_platform}" == osx-* ]]; then
 fi
 
 cmake -G Ninja \
-	${CMAKE_ARGS} \
 	-DCMAKE_INSTALL_PREFIX=${PREFIX} \
 	-DCMAKE_PREFIX_PATH=${PREFIX} \
 	-DCMAKE_INSTALL_LIBDIR=lib \
