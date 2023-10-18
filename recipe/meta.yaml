@@ -46,6 +46,8 @@ requirements:
     "symbolize", "synchronization", "time", "time_zone"
 ] %}
 test:
+  requires:
+    - pkg-config
   commands:
     # windows-only (almost-)all-in-one DLL + import library
     - if not exist %LIBRARY_BIN%\\abseil_dll.dll exit 1           # [win]
