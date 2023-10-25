@@ -26,6 +26,9 @@ requirements:
     - patch  # [osx]
     - cmake
     - ninja
+  host:
+    - gtest 1.14.0
+    - gmock 1.14.0
 
 # shared builds for flags_* libraries are not supported on windows, see
 # https://github.com/abseil/abseil-cpp/pull/1115
@@ -52,9 +55,6 @@ test:
     # windows-only (almost-)all-in-one DLL + import library
     - if not exist %LIBRARY_BIN%\\abseil_dll.dll exit 1           # [win]
     - if not exist %LIBRARY_LIB%\\abseil_dll.lib exit 1           # [win]
-    # absence of test targets in regular abseil output
-    - if exist %LIBRARY_BIN%\\abseil_test_dll.dll exit 1          # [win]
-    - if exist %LIBRARY_LIB%\\abseil_test_dll.lib exit 1          # [win]
 
     # absl_* libraries
     {% for each_lib in absl_libs %}
