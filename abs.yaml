@@ -4,6 +4,6 @@ upload_channels:
   - marekw
 channels:
   - marekw
-build_parameters:
-  - "--suppress-variables"
-  - "--error-overlinking"
+#build_parameters:
+#  - "--suppress-variables"
+#  - "--error-overlinking"
