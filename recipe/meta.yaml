@@ -55,7 +55,8 @@ outputs:
     build:
       string: cxx{{ cxx_standard }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
       run_exports:
-        - {{ pin_subpackage("libabseil", max_pin="x") }}
+        # breaking changes listed on patch versions
+        - {{ pin_subpackage("libabseil", max_pin="x.x") }}
         # also pin on ABI variant
         - libabseil =*=cxx{{ cxx_standard }}*
         # abseil needs the 10.13 headers even just to be `# include`d;
