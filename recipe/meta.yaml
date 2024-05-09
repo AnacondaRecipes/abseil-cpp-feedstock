@@ -41,6 +41,11 @@ source:
 build:
   number: 0
 
+requirements:
+  build:
+    - patch    # [unix]
+    - m2-patch # [win]
+
 outputs:
   # default behaviour is shared; however note that upstream does not support
   # fully shared builds on windows, and some static libs will remain, see above
@@ -57,13 +62,14 @@ outputs:
         # ensure that all dependent packages reflect that to
         # avoid the solver getting stuck in no-man's-land.
         - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx and x86_64]
-
+      missing_dso_whitelist:  # [s390x]
+        - '$RPATH/ld64.so.1'  # [s390x]
     requirements:
       build:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - cmake
-        - ninja
+        - ninja-base
       run_constrained:
         - libabseil-static ={{ version }}=cxx{{ cxx_standard }}*
         # make sure we don't co-install with old version of old package name
@@ -74,7 +80,7 @@ outputs:
       requires:
         - {{ compiler('cxx') }}
         - cmake
-        - ninja
+        - ninja-base
         - pkg-config
       files:
         - cmake_test/
@@ -141,9 +147,9 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - cmake
-        - ninja
+        - ninja-base
       host:
-        - gtest
+        - gtest 1.14
         - {{ pin_subpackage("libabseil", exact=True) }}
       run:
         - gtest
@@ -153,7 +159,7 @@ outputs:
       requires:
         - {{ compiler('cxx') }}
         - cmake
-        - ninja
+        - ninja-base
         - pkg-config
       files:
         - cmake_test/
