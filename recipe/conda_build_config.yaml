@@ -2,13 +2,12 @@ cxx_compiler:               # [win]
   - 'vs2019'                # [win]
 c_compiler:                 # [win]
   - 'vs2019'                # [win]
-vc:                         # [win]
-  - 16                      # [win]
 
-# abseil now only support MacOS >=10.13, see
-# https://github.com/abseil/abseil-cpp#support and
-# https://github.com/abseil/abseil-cpp/issues/1513
-CONDA_BUILD_SYSROOT:       # [osx and x86]
-  - /opt/MacOSX10.13.sdk   # [osx and x86]
-macos_min_version:         # [osx and x86]
-  - 10.13                  # [osx and x86]
+# abseil now only support MacOS >=10.15, see
+# https://github.com/abseil/abseil-cpp#support
+MACOSX_SDK_VERSION:        # [osx and x86_64]
+  - "10.15"                # [osx and x86_64]
+MACOSX_DEPLOYMENT_TARGET:  # [osx and x86_64]
+  - "10.15"                # [osx and x86_64]
+CONDA_BUILD_SYSROOT:       # [osx and x86_64]
+  - /opt/MacOSX10.15.sdk   # [osx and x86_64]
