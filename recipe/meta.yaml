@@ -206,6 +206,11 @@ about:
   dev_url: https://github.com/abseil/abseil-cpp
 
 extra:
+   anaconda-services:
+    ref: https://anaconda.zendesk.com/agent/tickets/55704
+    reason: Dependency for ortools
+  recipe-maintainers:
+    - ianaobi
   recipe-maintainers:
     - njzjz
     - bluescarni
