@@ -35,6 +35,8 @@ source:
     - patches/0001-default-dll-import-for-windows.patch
     # avoid that compilation in C++20 mode changes the ABI vs. C++17
     - patches/0002-don-t-use-C-20-stdlib-features-which-change-ABI-comp.patch
+    # workaround for https://github.com/abseil/abseil-cpp/issues/1624
+    - patches/0003-unconditionally-export-Mutex-Destructor.patch
 
 build:
   number: 0
