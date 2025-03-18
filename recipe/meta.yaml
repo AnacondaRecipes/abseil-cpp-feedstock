@@ -1,4 +1,4 @@
-{% set version = "20240116.2" %}
+{% set version = "20250127.0" %}
 {% set v_major = version.split(".")[0] %}
 # needs to match across all dependent packages; using C++20
 # is potentially problematic in some cases, see #45
@@ -28,7 +28,7 @@ package:
 
 source:
   url: https://github.com/abseil/abseil-cpp/archive/refs/tags/{{ version }}.tar.gz
-  sha256: 733726b8c3a6d39a4120d7e45ea8b41a434cdacde401cba500f14236c49b39dc
+  sha256: 16242f394245627e508ec6bb296b433c90f8d914f73b9c026fddb905e27276e8
   patches:
     # Helps downstream packages import the dll without an extra define
     # https://github.com/conda-forge/abseil-cpp-feedstock/issues/43#issuecomment-1242969515
@@ -36,7 +36,7 @@ source:
     # avoid that compilation in C++20 mode changes the ABI vs. C++17
     - patches/0002-don-t-use-C-20-stdlib-features-which-change-ABI-comp.patch
     # workaround for https://github.com/abseil/abseil-cpp/issues/1624
-    - patches/0003-unconditionally-export-Mutex-Destructor.patch
+    - patches/0003-unconditionally-export-Mutex-Destructor.patch  # [linux]
 
 build:
   number: 0
@@ -131,6 +131,8 @@ outputs:
         - cmake --build .
         - ./flags_example    # [unix]
         - flags_example.exe  # [win]
+        # Check for absence of disturbing SHELL:-Xarch... content in pkg-config files
+        - grep -q SHELL $PREFIX/lib/pkgconfig/absl_random_internal_randen_hwaes.pc && exit 1 || exit 0  # [unix]
 
   # tests & test-helpers
   - name: libabseil-tests

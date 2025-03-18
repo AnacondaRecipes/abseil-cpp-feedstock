@@ -9,10 +9,10 @@ Subject: [PATCH 3/3] unconditionally export Mutex Destructor
  2 files changed, 7 deletions(-)
 
 diff --git a/absl/synchronization/mutex.cc b/absl/synchronization/mutex.cc
-index cb3c7e74..76d561df 100644
+index 52ed27f..e07dc6e 100644
 --- a/absl/synchronization/mutex.cc
 +++ b/absl/synchronization/mutex.cc
-@@ -731,12 +731,10 @@ static unsigned TsanFlags(Mutex::MuHow how) {
+@@ -738,12 +738,10 @@ static unsigned TsanFlags(Mutex::MuHow how) {
  }
  #endif
  
@@ -26,10 +26,10 @@ index cb3c7e74..76d561df 100644
  #if !defined(NDEBUG) || defined(ABSL_HAVE_THREAD_SANITIZER)
  void Mutex::Dtor() {
 diff --git a/absl/synchronization/mutex.h b/absl/synchronization/mutex.h
-index d53a22bb..2cd5a1e4 100644
+index be3f1f5..a1a0f2e 100644
 --- a/absl/synchronization/mutex.h
 +++ b/absl/synchronization/mutex.h
-@@ -1064,11 +1064,6 @@ inline Mutex::Mutex() : mu_(0) {
+@@ -1065,11 +1065,6 @@ inline Mutex::Mutex() : mu_(0) {
  
  inline constexpr Mutex::Mutex(absl::ConstInitType) : mu_(0) {}
  
