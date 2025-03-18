@@ -73,7 +73,7 @@ outputs:
         - ninja-base
       run_constrained:
         - libabseil-static ={{ version }}=cxx{{ cxx_standard }}*
-        # make sure we don't co-install with old version of old package name
+        # make sure we don't co-install with old version of old package name 
         - abseil-cpp ={{ version }}
         - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx and x86_64]
 
