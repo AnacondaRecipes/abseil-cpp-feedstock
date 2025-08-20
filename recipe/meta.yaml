@@ -39,7 +39,7 @@ source:
     - patches/0003-unconditionally-export-Mutex-Destructor.patch  # [linux]
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
