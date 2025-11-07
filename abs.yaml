@@ -1,0 +1,13 @@
+# Disable overlinking errors, there are false positives now that GCC 15 has been released.
+#      - Needed DSO lib/libstdc++.so.6
+#      - Needed DSO lib/libgcc_s.so.1 
+build_parameters:
+  - "--suppress-variables"
+  - "--skip-existing"
+  - "--no-error-overlinking"
+
+staging_channel_upload_target: protobuf-6.33.0-build-4
+
+channels:
+  - https://staging.continuum.io/pbp/protobuf-6.33.0-build-4
+
