@@ -1,4 +1,4 @@
-{% set version = "20250127.0" %}
+{% set version = "20250814.1" %}
 {% set v_major = version.split(".")[0] %}
 # needs to match across all dependent packages; using C++20
 # is potentially problematic in some cases, see #45
@@ -7,17 +7,18 @@
 # shared builds for flags_* libraries are not supported on windows, see
 # https://github.com/abseil/abseil-cpp/pull/1115
 {% set absl_libs_always_static_on_win = [
-    "log_flags", "flags_commandlineflag", "flags_config", "flags_marshalling", "flags_parse",
-    "flags_private_handle_accessor", "flags_program_name", "flags_reflection", "flags_usage"
+    "decode_rust_punycode", "demangle_rust", "flags_commandlineflag", "flags_config", "flags_marshalling",
+    "flags_parse", "flags_private_handle_accessor", "flags_program_name", "flags_reflection", "flags_usage",
+    "hashtable_profiler", "log_flags", "poison", "profile_builder"
 ] %}
 
 {% set absl_libs = absl_libs_always_static_on_win + [
-    "base", "civil_time", "cord", "cordz_functions", "cordz_handle", "cordz_info",
-    "cordz_sample_token", "examine_stack", "exponential_biased", "failure_signal_handler",
-    "hash", "hashtablez_sampler", "int128", "log_severity", "low_level_hash", "periodic_sampler",
+    "base", "civil_time", "crc_cord_state", "crc_cpu_detect", "crc32c", "cord", "cordz_functions",
+    "cordz_handle", "cordz_info", "cordz_sample_token", "die_if_null", "examine_stack", "exponential_biased",
+    "failure_signal_handler", "hash", "hashtablez_sampler", "int128", "log_severity", "periodic_sampler",
     "random_distributions", "random_seed_gen_exception", "random_seed_sequences", "raw_hash_set",
     "scoped_set_env", "spinlock_wait", "stacktrace", "status", "statusor", "strerror", "strings",
-    "symbolize", "synchronization", "time", "time_zone"
+    "symbolize", "synchronization", "throw_delegate", "time", "time_zone"
 ] %}
 # test helper targets (but used e.g. by protobuf)
 {% set absl_test_libs = ["scoped_mock_log"] %}
@@ -28,23 +29,19 @@ package:
 
 source:
   url: https://github.com/abseil/abseil-cpp/archive/refs/tags/{{ version }}.tar.gz
-  sha256: 16242f394245627e508ec6bb296b433c90f8d914f73b9c026fddb905e27276e8
+  sha256: 1692f77d1739bacf3f94337188b78583cf09bab7e420d2dc6c5605a4f86785a1
   patches:
     # Helps downstream packages import the dll without an extra define
     # https://github.com/conda-forge/abseil-cpp-feedstock/issues/43#issuecomment-1242969515
     - patches/0001-default-dll-import-for-windows.patch
     # avoid that compilation in C++20 mode changes the ABI vs. C++17
     - patches/0002-don-t-use-C-20-stdlib-features-which-change-ABI-comp.patch
-    # workaround for https://github.com/abseil/abseil-cpp/issues/1624
-    - patches/0003-unconditionally-export-Mutex-Destructor.patch  # [linux]
+    # Avoid SHELL:-Xarch… flags leaking into pkg-config files
+    # These flagse are not used anyways in our setup
+    - patches/0003-Don-t-try-to-compile-to-multiple-OSX-arches.patch
 
 build:
   number: 0
-
-requirements:
-  build:
-    - patch    # [unix]
-    - m2-patch # [win]
 
 outputs:
   # default behaviour is shared; however note that upstream does not support
@@ -55,31 +52,26 @@ outputs:
     build:
       string: cxx{{ cxx_standard }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
       run_exports:
-        # breaking changes listed on patch versions
-        - {{ pin_subpackage("libabseil", max_pin="x.x") }}
+        - {{ pin_subpackage("libabseil", max_pin="x") }}
         # also pin on ABI variant
         - libabseil =*=cxx{{ cxx_standard }}*
-        # abseil needs the 10.13 headers even just to be `# include`d;
-        # ensure that all dependent packages reflect that to
-        # avoid the solver getting stuck in no-man's-land.
-        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx and x86_64]
-      missing_dso_whitelist:  # [s390x]
-        - '$RPATH/ld64.so.1'  # [s390x]
+
     requirements:
       build:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        - {{ stdlib('c') }}
         - cmake
         - ninja-base
       run_constrained:
         - libabseil-static ={{ version }}=cxx{{ cxx_standard }}*
-        # make sure we don't co-install with old version of old package name 
+        # make sure we don't co-install with old version of old package name
         - abseil-cpp ={{ version }}
-        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx and x86_64]
 
     test:
       requires:
         - {{ compiler('cxx') }}
+        - {{ stdlib('c') }}
         - cmake
         - ninja-base
         - pkg-config
@@ -149,10 +141,11 @@ outputs:
       build:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        - {{ stdlib('c') }}
         - cmake
         - ninja-base
       host:
-        - gtest 1.14
+        - gtest {{ gtest }}
         - {{ pin_subpackage("libabseil", exact=True) }}
       run:
         - gtest
@@ -161,6 +154,7 @@ outputs:
     test:
       requires:
         - {{ compiler('cxx') }}
+        - {{ stdlib('c') }}
         - cmake
         - ninja-base
         - pkg-config
