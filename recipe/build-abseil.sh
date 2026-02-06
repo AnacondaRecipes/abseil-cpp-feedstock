@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 set -exuo pipefail
 
 mkdir -p build
